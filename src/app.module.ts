@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+// import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -13,7 +13,7 @@ import { AppService } from './app.service';
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI),
+    // MongooseModule.forRoot(process.env.MONGO_URI),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),

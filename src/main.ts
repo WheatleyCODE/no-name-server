@@ -10,7 +10,7 @@ async function start() {
     app.use(cookieParser());
     app.enableCors({
       credentials: true,
-      origin: process.env.API_CLIENT,
+      origin: process.env.API_CLIENT_IP,
     });
 
     const config = new DocumentBuilder()
