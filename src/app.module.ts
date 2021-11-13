@@ -6,6 +6,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TokensModule } from './tokens/tokens.module';
 
 @Module({
   controllers: [AppController],
@@ -19,6 +20,7 @@ import { AppService } from './app.service';
       rootPath: path.resolve(__dirname, 'static'),
     }),
     UserModule,
+    TokensModule,
   ],
 })
 export class AppModule {}
