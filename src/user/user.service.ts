@@ -13,17 +13,14 @@ export class UserService {
   }
 
   async createUser(userDto: CreateUserDto): Promise<UserDocument> {
-    const newUser = this.userModel.create(userDto);
-    return newUser;
+    return this.userModel.create(userDto);
   }
 
-  async getUserByEmail(email: string) {
-    const user = this.userModel.findOne({ email });
-    return user;
+  async getUserByEmail(email: string): Promise<UserDocument> {
+    return this.userModel.findOne({ email });
   }
 
   async getUserByActivationLink(activationLink: string): Promise<UserDocument> {
-    const user = this.userModel.findOne({ activationLink });
-    return user;
+    return this.userModel.findOne({ activationLink });
   }
 }
