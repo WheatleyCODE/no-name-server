@@ -39,7 +39,6 @@ export class AuthController {
     return res.redirect(process.env.API_CLIENT);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('/refresh')
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const { refreshToken } = req.cookies;
