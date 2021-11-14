@@ -5,8 +5,12 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/auth/roles.auth.decorator';
+import { UserRoles } from 'src/types';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { User, UserDocument } from './schemas/user.schema';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +22,8 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get all user' })
   @ApiResponse({ status: 200, type: [User] })
+  @Roles(UserRoles.ADMIN)
+  @UseGuards(RolesGuard)
   @HttpCode(HttpStatus.OK)
   @Get('/')
   getUsers(): Promise<UserDocument[]> {
