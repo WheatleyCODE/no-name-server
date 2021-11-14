@@ -55,7 +55,13 @@ export class RolesGuard implements CanActivate {
       });
     }
 
+    if (!(user.role === requiredRoles)) {
+      throw new UnauthorizedException({
+        message: 'Нет прав',
+      });
+    }
+
     req.user = user;
-    return user.role === requiredRoles;
+    return true;
   }
 }
