@@ -13,4 +13,7 @@ export class CreateUserDto {
     message: 'Password must be no less than 4 and no more than 16',
   })
   password: string;
+
+  @ApiProperty({ example: 'somerandomstring', description: 'Activation link' })
+  activationLink: string;
 }

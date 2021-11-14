@@ -41,11 +41,12 @@ export class AuthService {
       const user = await this.usersService.createUser({
         email,
         password: hashPassword,
+        activationLink,
       });
 
       this.mailService.sendActivationMail(
         email,
-        `${process.env.API_SERVER_IP}/auth/activate/${activationLink}`,
+        `${process.env.API_SERVER}/api/auth/activate/${activationLink}`,
       );
       return this.tokensService.generateTokens(user);
     } catch (e) {
