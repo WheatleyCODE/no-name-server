@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UserDocument } from '../user/schemas/user.schema';
 import { Tokens, TokensDocument } from './schemas/tokens.schema';
@@ -23,17 +23,24 @@ export class TokensService {
   }
 
   async generateTokens({ email, _id, role, isActivated }: UserDocument) {
-    const payload = { email, _id, role, isActivated };
-    const accessToken = this.accessTokenService.generateToken(payload);
-    const refreshToken = this.refreshToken.generateToken(payload);
+    try {
+      const payload = { email, _id, role, isActivated };
+      const accessToken = this.accessTokenService.generateToken(payload);
+      const refreshToken = this.refreshToken.generateToken(payload);
 
-    await this.saveTokens(_id, accessToken, refreshToken);
+      await this.saveTokens(_id, accessToken, refreshToken);
 
-    return {
-      accessToken,
-      refreshToken,
-      user: { ...payload },
-    };
+      return {
+        accessToken,
+        refreshToken,
+        user: { ...payload },
+      };
+    } catch (e) {
+      throw new HttpException(
+        'Ошибка при генерации и сохранении токена',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   private async saveTokens(userId, accessToken: string, refreshToken: string) {

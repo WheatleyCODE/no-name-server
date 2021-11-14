@@ -18,28 +18,24 @@ export class AuthService {
     private mailService: MailService,
     private tokensService: TokensService,
   ) {}
+
   async login(userDto: CreateUserDto) {
-    try {
-      const user = await this.validateUser(userDto);
-      return await this.tokensService.generateTokens(user);
-    } catch (e) {
-      throw new HttpException(
-        { message: 'Некорректный Логин или Пароль' },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const user = await this.validateUser(userDto);
+    const clientData = await this.tokensService.generateTokens(user);
+    return clientData;
   }
 
   async registration({ email, password }: CreateUserDto) {
-    try {
-      const candidate = await this.usersService.getUserByEmail(email);
-      if (candidate) {
-        throw new HttpException(
-          'Пользователь с таким Email уже сущетсвует',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+    const candidate = await this.usersService.getUserByEmail(email);
 
+    if (candidate) {
+      throw new HttpException(
+        'Пользователь с таким Email уже сущетсвует',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    try {
       const hashPassword = await bcrypt.hash(password, 8);
       const activationLink = uuid.v4();
       const user = await this.usersService.createUser({
@@ -51,20 +47,17 @@ export class AuthService {
         email,
         `${process.env.API_SERVER_IP}/auth/activate/${activationLink}`,
       );
-
       return this.tokensService.generateTokens(user);
     } catch (e) {
-      console.log(e);
       throw new HttpException(
-        { message: 'Ошибка при регистрации' },
+        'Ошибка при регистрации',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
   async logout(refreshToken: string) {
-    const token = await this.tokensService.removeTokens(refreshToken);
-    return token;
+    return await this.tokensService.removeTokens(refreshToken);
   }
 
   async refreshAuth(refreshToken: string) {
@@ -109,15 +102,17 @@ export class AuthService {
     try {
       const user = await this.usersService.getUserByEmail(email);
       const passwordEquals = await bcrypt.compare(password, user.password);
+
       if (user && passwordEquals) {
         return user;
       }
+
       throw new UnauthorizedException({
-        message: 'Некоректный логин или пароль',
+        message: 'Некоректный Логин или Пароль',
       });
     } catch (e) {
       throw new UnauthorizedException({
-        message: 'Некоректный логин или пароль',
+        message: 'Некоректный Логин или Пароль',
       });
     }
   }
