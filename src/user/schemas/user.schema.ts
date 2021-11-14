@@ -1,3 +1,4 @@
+import { UserRoles } from 'src/types';
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
@@ -54,13 +55,13 @@ export class User {
 
   @ApiProperty({
     example: 'user',
-    description: 'Role: "USER | VIP | ADMIN"', // ! Сделать Enum
+    description: 'Role: "USER | VIP | ADMIN"',
   })
   @Prop({
-    default: 'USER', // ! Сделать Enum
+    default: UserRoles.USER,
     type: String,
   })
-  role: string; // ! Сделать Enum
+  role: UserRoles;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

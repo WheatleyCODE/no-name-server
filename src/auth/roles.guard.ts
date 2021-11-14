@@ -1,5 +1,5 @@
 import { TokensService } from '../tokens/tokens.service';
-import { ROLES_KEY } from './roles.auth.decorator';
+import { ROLES_KEY } from '../types';
 
 import {
   CanActivate,
