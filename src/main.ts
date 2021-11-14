@@ -18,7 +18,7 @@ async function start() {
       .setTitle('noname')
       .setDescription('noname')
       .setVersion('1.0.0')
-      .addTag('Events')
+      .addTag('noname')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);

@@ -4,6 +4,7 @@ import { ROLES_KEY } from '../types';
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -56,7 +57,7 @@ export class RolesGuard implements CanActivate {
     }
 
     if (!(user.role === requiredRoles)) {
-      throw new UnauthorizedException({
+      throw new ForbiddenException({
         message: 'Нет прав',
       });
     }
