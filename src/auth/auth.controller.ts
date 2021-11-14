@@ -22,6 +22,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login' })
   @ApiResponse({ status: 200, type: AuthResponse })
   @Post('/login')
+  @UsePipes(ValidationPipe)
   async login(@Body() userDto: CreateUserDto, @Res() res: Response) {
     const userData = await this.authService.login(userDto);
     res.cookie('refreshToken', userData.refreshToken, {
