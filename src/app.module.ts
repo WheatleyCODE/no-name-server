@@ -21,6 +21,9 @@ import { MailModule } from './mail/mail.module';
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'static'),
+    }),
     UserModule,
     TokensModule,
     AuthModule,
