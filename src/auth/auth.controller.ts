@@ -37,8 +37,13 @@ export class AuthController {
   @ApiResponse({ status: 200, type: AuthResponse })
   @Post('/registration')
   @UsePipes(ValidationPipe)
-  registration(@Body() userDto: CreateUserDto) {
-    return this.authService.registration(userDto);
+  async registration(@Body() userDto: CreateUserDto, @Res() res: Response) {
+    const userData = await this.authService.registration(userDto);
+    res.cookie('refreshToken', userData.refreshToken, {
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    return res.json(userData);
   }
 
   @ApiOperation({ summary: 'Logout + Delete Refresh Token' })
@@ -54,10 +59,10 @@ export class AuthController {
   @Get('/activate/:link')
   @ApiOperation({ summary: 'Activate account' })
   @ApiResponse({ status: 200 })
-  activateAccount(@Req() req: Request, @Res() res: Response) {
+  async activateAccount(@Req() req: Request, @Res() res: Response) {
     const activationLink = req.params.link;
-    this.authService.activateAccount(activationLink);
-    return res.redirect(process.env.API_CLIENT);
+    await this.authService.activateAccount(activationLink);
+    return res.redirect(process.env.API_CLIENT_IP);
   }
 
   @Post('/activate/link')

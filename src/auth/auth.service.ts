@@ -46,7 +46,7 @@ export class AuthService {
 
       this.mailService.sendActivationMail(
         email,
-        `${process.env.API_SERVER}/api/auth/activate/${activationLink}`,
+        `${process.env.API_SERVER_IP}/api/auth/activate/${activationLink}`,
       );
       return this.tokensService.generateTokens(user);
     } catch (e) {
@@ -105,7 +105,7 @@ export class AuthService {
 
       this.mailService.sendActivationMail(
         email,
-        `${process.env.API_SERVER}/api/auth/activate/${user.activationLink}`,
+        `${process.env.API_SERVER_IP}/api/auth/activate/${user.activationLink}`,
       );
     } catch (e) {
       throw new HttpException(
@@ -126,13 +126,19 @@ export class AuthService {
         return user;
       }
 
-      throw new UnauthorizedException({
-        message: 'Некоректный Логин или Пароль',
-      });
+      throw new HttpException(
+        {
+          message: 'Неверная Почта или Пароль',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     } catch (e) {
-      throw new UnauthorizedException({
-        message: 'Некоректный Логин или Пароль',
-      });
+      throw new HttpException(
+        {
+          message: 'Неверная Почта или Пароль',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
