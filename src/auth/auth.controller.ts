@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { SendEmail } from './dto/send-email.dto';
 
 @ApiTags('Autorization')
 @Controller('/api/auth')
@@ -57,6 +58,14 @@ export class AuthController {
     const activationLink = req.params.link;
     this.authService.activateAccount(activationLink);
     return res.redirect(process.env.API_CLIENT);
+  }
+
+  @Post('/activate/link')
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Again send activation link on email' })
+  @ApiResponse({ status: 200 })
+  sendActivationLink(@Body() { email }: SendEmail) {
+    this.authService.sendEmailAgain(email);
   }
 
   @ApiOperation({ summary: 'Registration' })

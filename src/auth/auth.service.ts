@@ -99,6 +99,24 @@ export class AuthService {
     }
   }
 
+  async sendEmailAgain(email: string): Promise<void> {
+    try {
+      const user = await this.usersService.getUserByEmail(email);
+
+      this.mailService.sendActivationMail(
+        email,
+        `${process.env.API_SERVER}/api/auth/activate/${user.activationLink}`,
+      );
+    } catch (e) {
+      throw new HttpException(
+        {
+          message: 'Не удалось отправить письмо',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   private async validateUser({ email, password }: CreateUserDto) {
     try {
       const user = await this.usersService.getUserByEmail(email);
