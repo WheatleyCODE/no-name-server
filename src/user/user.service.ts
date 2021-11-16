@@ -24,9 +24,7 @@ export class UserService {
     return this.userModel.findOne({ activationLink });
   }
 
-  async getUserByResetPasswordLink(
-    resetPasswordLink: string,
-  ): Promise<UserDocument> {
-    return this.userModel.findOne({ resetPasswordLink });
+  async getUserByResetPasswordLink(link: string): Promise<UserDocument> {
+    return this.userModel.findOne({ resetPasswordLink: link });
   }
 }

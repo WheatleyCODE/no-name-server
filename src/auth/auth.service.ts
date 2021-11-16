@@ -1,4 +1,3 @@
-import { MailService } from '../mail/mail.service';
 import {
   Injectable,
   HttpStatus,
@@ -7,6 +6,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import * as uuid from 'uuid';
+import { MailService } from '../mail/mail.service';
 import { TokensService } from '../tokens/tokens.service';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
