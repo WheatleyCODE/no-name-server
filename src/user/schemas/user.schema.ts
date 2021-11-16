@@ -34,6 +34,16 @@ export class User {
   })
   activationLink: string;
 
+  @ApiProperty({
+    example: 'randomstring',
+    description: 'link for reset password',
+  })
+  @Prop({
+    type: String,
+    default: null,
+  })
+  resetPasswordLink: string | null;
+
   @ApiProperty({ example: '123456', description: 'Password' })
   @Prop({
     type: String,

@@ -117,6 +117,64 @@ export class AuthService {
     }
   }
 
+  async resetPassword(email: string): Promise<void> {
+    try {
+      const user = await this.usersService.getUserByEmail(email);
+      if (!user) {
+        throw new HttpException(
+          {
+            message: 'Такого пользователя нет',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      const resetPasswordLink = uuid.v4();
+      user.resetPasswordLink = resetPasswordLink;
+      await user.save();
+
+      this.mailService.sendResetPasswordMail(
+        email,
+        `${process.env.API_CLIENT_IP}/reset/${user.resetPasswordLink}`,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async changePassword(
+    link: string,
+    newPassword: string,
+  ): Promise<{ message: string }> {
+    try {
+      const user = await this.usersService.getUserByResetPasswordLink(link);
+      if (!user) {
+        throw new HttpException(
+          {
+            message: 'Смена пароля не запрашивалась',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      const hashPassword = await bcrypt.hash(newPassword, 8);
+      user.password = hashPassword;
+      user.resetPasswordLink = null;
+      await user.save();
+
+      return {
+        message: 'Пароль успешно изменен',
+      };
+    } catch (e) {
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   private async validateUser({ email, password }: CreateUserDto) {
     try {
       const user = await this.usersService.getUserByEmail(email);

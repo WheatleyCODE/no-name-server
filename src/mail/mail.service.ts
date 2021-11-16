@@ -38,4 +38,29 @@ export class MailService {
       );
     }
   }
+
+  async sendResetPasswordMail(to: string, link: string) {
+    try {
+      console.log('Отправляем письмо: ' + to);
+
+      await this.transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to,
+        subject: 'Востановление пароля - ' + process.env.API_SERVER_IP,
+        text: '',
+        html: `
+          <div>
+            <h2>Для востановления пароля перейдите по ссылке:</h2>
+            <a href="${link}">Ссылка востановления пароля</a>
+          </div>
+        `,
+      });
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(
+        { message: 'Ошибка при отправке письма' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

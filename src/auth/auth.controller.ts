@@ -1,3 +1,4 @@
+import { CreateNewPassword } from './dto/create-new-password.dto';
 import { ValidationPipe } from './../pipes/validation.pipe';
 import { AuthResponse } from './dto/auth-response.dto';
 import { Request, Response } from 'express';
@@ -71,6 +72,22 @@ export class AuthController {
   @ApiResponse({ status: 200 })
   sendActivationLink(@Body() { email }: SendEmail) {
     this.authService.sendEmailAgain(email);
+  }
+
+  @Post('/reset/password')
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Reset password' })
+  @ApiResponse({ status: 201 })
+  resetPassword(@Body() { email }: SendEmail) {
+    this.authService.resetPassword(email);
+  }
+
+  @Post('/change/password')
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Change password' })
+  @ApiResponse({ status: 201 })
+  async changePassword(@Body() { link, password }: CreateNewPassword) {
+    return await this.authService.changePassword(link, password);
   }
 
   @ApiOperation({ summary: 'Registration' })
