@@ -138,7 +138,12 @@ export class AuthService {
         `${process.env.API_CLIENT_IP}/reset/${user.resetPasswordLink}`,
       );
     } catch (e) {
-      console.log(e);
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -169,6 +174,30 @@ export class AuthService {
       throw new HttpException(
         {
           message: e.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async checkResetLink(link: string): Promise<{ message: string }> {
+    try {
+      const user = await this.usersService.getUserByResetPasswordLink(link);
+      if (!user) {
+        throw new HttpException(
+          {
+            message: 'Пользователь не запрашивал сброс пароля',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      return {
+        message: 'ОК',
+      };
+    } catch (e) {
+      throw new HttpException(
+        {
+          message: 'Пользователь не запрашивал сброс пароля',
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

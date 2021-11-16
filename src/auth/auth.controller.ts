@@ -1,3 +1,4 @@
+import { CheckLink } from './dto/check-link.dto';
 import { CreateNewPassword } from './dto/create-new-password.dto';
 import { ValidationPipe } from './../pipes/validation.pipe';
 import { AuthResponse } from './dto/auth-response.dto';
@@ -79,7 +80,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Reset password' })
   @ApiResponse({ status: 201 })
   resetPassword(@Body() { email }: SendEmail) {
-    this.authService.resetPassword(email);
+    return this.authService.resetPassword(email);
   }
 
   @Post('/change/password')
@@ -88,6 +89,14 @@ export class AuthController {
   @ApiResponse({ status: 201 })
   async changePassword(@Body() { link, password }: CreateNewPassword) {
     return await this.authService.changePassword(link, password);
+  }
+
+  @Post('/change/check')
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Check resetPasswordLink' })
+  @ApiResponse({ status: 201 })
+  async checkResetPasswordLink(@Body() { link }: CheckLink) {
+    return await this.authService.checkResetLink(link);
   }
 
   @ApiOperation({ summary: 'Registration' })
