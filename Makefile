@@ -1,4 +1,4 @@
 run:
-	docker run -d -p 4200:3000 --rm --name nonameserver wheatleycode/nonameserver
+	docker run -d -p 5000:5000 --rm --name nonameserver ID
 stop:
 	docker stop nonameserver
